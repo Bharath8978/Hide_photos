@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HIDING IMAGES</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form" action="/login" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="login-username" name="user" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="login-password" name="pass" required>
+            </div>
+            <button type="submit">Login</button><br>
+           
+        </form>
+        <p>Don't have an account? <a href="#" id="signup-link">Signup here</a></p>
+        <p id="err2"></p>
+    </div>
+
+    <div class="signup-container" style="display: none;">
+        <h2>Signup</h2>
+        <form id="signup-form" action="/signup" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="signup-username" name="user" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="signup-password" name="pass" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="signup-email" name="mail" required>
+            </div>
+            <button type="submit">Signup</button>
+        </form>
+    </div>
+
+    <div class="otp-verification-container" style="display: none;">
+        <h2>OTP Verification</h2>
+        <p>IF OTP IS NOT GETTING PLEASE CHECK YOUR DETAILS</p>
+        <form id="otp-form" action="/otp" method="POST">
+            <div class="form-group">
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp-verification" name="userOtp" required>
+            </div>
+            <button type="submit">Verify OTP</button>
+            <br>
+            <p id="error"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('signup-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.querySelector('.login-container').style.display = 'none';
+            document.querySelector('.signup-container').style.display = 'block';
+        });
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = {
+                user: document.getElementById('login-username').value,
+                pass: document.getElementById('login-password').value
+            };
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.text())
+            .then(message => {
+                if (message === 'Login Successful') {
+                    window.location.href = 'home.html';
+                } else {
+                    document.getElementById('err2').innerText = "Incorrect username or password";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = {
+                user: document.getElementById('signup-username').value,
+                pass: document.getElementById('signup-password').value,
+                mail: document.getElementById('signup-email').value
+            };
+
+            fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.text())
+            .then(message => {
+                if(message === 'username already exist'){
+                    alert('username already exist');
+                }
+                else{
+                    document.querySelector('.signup-container').style.display = 'none';
+                    document.querySelector('.otp-verification-container').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('otp-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = {
+                userOtp: document.getElementById('otp-verification').value
+            };
+
+            fetch('/otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.text())
+            .then(message => {
+                if (message === 'USER ADDED SUCCESSFULLY') {
+                    document.querySelector('.otp-verification-container').style.display = 'none';
+                    document.querySelector('.login-container').style.display = 'block';
+                } else {
+                    document.getElementById('error').innerText = "OTP is wrong!!";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

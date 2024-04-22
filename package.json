@@ -1,0 +1,21 @@
+{
+  "name": "prac-7-layers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.3",
+    "fs": "^0.0.1-security",
+    "mongodb": "^6.3.0",
+    "otp-generator": "^4.0.1",
+    "path": "^0.12.7",
+    "twilio": "^4.21.0"
+  }
+}

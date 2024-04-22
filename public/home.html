@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #4169e1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #4169e1;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        button, .view-photos-btn {
+            background-color: #4169e1;
+            color: #ffffff;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: auto;
+            display: block;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            font-size: 14px;
+        }
+        .upload{
+            width: 100%;
+        }
+
+        button:hover, .view-photos-btn:hover {
+            background-color: #3558cb;
+        }
+
+        .view-photos-btn {
+            max-width: 460px;
+            margin: 0 auto;
+        }
+        @media only screen and (min-width: 600px) {
+    .container {
+        max-width: 500px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Photos</h1>
+        <form id="upload-form" action="/upload-multiple" method="post" enctype="multipart/form-data">
+            <input type="file" name="image" multiple>
+            <button type="submit" class="upload">Upload</button>
+        </form>
+        <h1>View Photos</h1>
+        <a href="images.html" class="view-photos-btn">View Photos</a>
+    </div>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            const files = document.querySelector('input[type="file"]').files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append('image', files[i]);
+            }
+            fetch('/upload-multiple', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(message => {
+                if (message === 'IMAGE UPLOADED SUCCESSFULLY') {
+                    alert("IMAGE UPLOADED SUCCESSFULLY");
+                } else {
+                    alert("IMAGE NOT UPLOADED");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
